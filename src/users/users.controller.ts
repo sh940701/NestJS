@@ -10,8 +10,9 @@ export class UsersController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
+    const {name, email} = createUserDto
 
-    return this.usersService.create(createUserDto)
+    return `유저를 생성했습니다. 이름: ${name}, 이메일: ${email}`
   }
 
   @Get()
