@@ -1,13 +1,29 @@
-import { Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Get,
+  Headers,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { VerifyEmailDto } from './dto/verify-email.dto'
 import { UserLoginDto } from './dto/user-login.dto'
 import { UserInfo } from './UserInfo'
 import { UsersService } from './users.service'
+import { AuthService } from '../auth/auth.service'
+import { AuthGuard } from '../guard/authguard'
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {
+  constructor(
+    private usersService: UsersService,
+    private authService: AuthService,
+  ) {
   }
 
   @Post()
@@ -30,9 +46,10 @@ export class UsersController {
     return await this.usersService.login(email, password)
   }
 
+  @UseGuards(AuthGuard)
   @Get('/:id')
-  async getUserInfo(@Param('id', ParseIntPipe) userId: string): Promise<UserInfo> {
-    return await this.usersService.getUserInfo(userId)
+  async getUserInfo(@Headers() headers: any, @Param('id') userId: string): Promise<UserInfo> {
+    return this.usersService.getUserInfo(userId)
   }
 
   @Get()
