@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { UsersModule } from './users/users.module'
 import { ConfigModule } from '@nestjs/config'
 import emailConfig from './config/emailConfig'
@@ -29,11 +29,5 @@ import authConfig from './config/authConfig'
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule{
-  configure(consumer: MiddlewareConsumer): any {
-    consumer
-      .apply(LoggerMiddleware)
-      .exclude({path: '/users', method: RequestMethod.GET})
-      .forRoutes(UsersController)
-  }
+export class AppModule {
 }
